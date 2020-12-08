@@ -11,8 +11,9 @@ import { setContext, getLocation, getRouteData, normalizeError } from './utils'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_5fc074d8 from 'nuxt_plugin_plugin_5fc074d8' // Source: ./components/plugin.js (mode: 'all')
-import nuxt_plugin_buefy_1ce8233f from 'nuxt_plugin_buefy_1ce8233f' // Source: ./buefy.js (mode: 'all')
+import nuxt_plugin_plugin_1f792eba from 'nuxt_plugin_plugin_1f792eba' // Source: ./components/plugin.js (mode: 'all')
+import nuxt_plugin_axios_dc499f8e from 'nuxt_plugin_axios_dc499f8e' // Source: ./axios.js (mode: 'all')
+import nuxt_plugin_jsonld_593ee954 from 'nuxt_plugin_jsonld_593ee954' // Source: ../plugins/jsonld (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -51,7 +52,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"demo-firebase-nuxt","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"## Build Setup"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","type":"text\u002Fcss","href":"\u002F\u002Fcdn.materialdesignicons.com\u002F5.0.45\u002Fcss\u002Fmaterialdesignicons.min.css"}],"style":[],"script":[]},
+    head: {"title":"demo-firebase-nuxt","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"## Build Setup"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
     router,
     nuxt: {
@@ -165,12 +166,16 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_5fc074d8 === 'function') {
-    await nuxt_plugin_plugin_5fc074d8(app.context, inject)
+  if (typeof nuxt_plugin_plugin_1f792eba === 'function') {
+    await nuxt_plugin_plugin_1f792eba(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_buefy_1ce8233f === 'function') {
-    await nuxt_plugin_buefy_1ce8233f(app.context, inject)
+  if (typeof nuxt_plugin_axios_dc499f8e === 'function') {
+    await nuxt_plugin_axios_dc499f8e(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_jsonld_593ee954 === 'function') {
+    await nuxt_plugin_jsonld_593ee954(app.context, inject)
   }
 
   // Lock enablePreview in context

@@ -1,16 +1,16 @@
 [
   {
-    "name": "inspire",
-    "path": "/inspire",
-    "component": "/home/s4k1b/Development/github/s4k1b/demo-firebase-nuxt/pages/inspire.vue",
-    "chunkName": "pages/inspire",
-    "_name": "_59923638"
-  },
-  {
     "name": "index",
     "path": "/",
-    "component": "/home/s4k1b/Development/github/s4k1b/demo-firebase-nuxt/pages/index.vue",
+    "component": "/home/jonathan/Documents/demo-firebase-nuxt/pages/index.vue",
     "chunkName": "pages/index",
-    "_name": "_0039e9b0"
+    "_name": "_b8ad3276"
+  },
+  {
+    "name": "id",
+    "path": "/:id",
+    "component": "/home/jonathan/Documents/demo-firebase-nuxt/pages/_id.vue",
+    "chunkName": "pages/_id",
+    "_name": "_3d075326"
   }
 ]
