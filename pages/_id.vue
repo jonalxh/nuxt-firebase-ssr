@@ -1,9 +1,9 @@
 <template>
-	<div>
+	<b-container>
 		<h3>{{ job.title }}</h3>
 		<b-img-lazy :src="getImgURL(job.image)"></b-img-lazy>
 		<div v-html="job.description"></div>
-	</div>
+	</b-container>
 </template>
 
 <script>
@@ -101,7 +101,6 @@ export default {
 				imageHeight: "750",
 				textAreaWidth: "950",
 			});
-			console.log("🚀 socialImage", socialImage);
 		}
 		return { job , socialImage, structuredData };
 	},

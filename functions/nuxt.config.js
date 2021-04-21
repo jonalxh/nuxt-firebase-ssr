@@ -2,11 +2,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 // eslint-disable-next-line nuxt/no-cjs-in-config
 module.exports = {
-  /*
-   ** Nuxt rendering mode
-   ** See https://nuxtjs.org/api/configuration-mode
-   */
-  mode: 'universal',
+  telemetry: true,
   /*
    ** Nuxt target
    ** See https://nuxtjs.org/api/configuration-target
@@ -59,8 +55,7 @@ module.exports = {
    */
   modules: [
     // Doc: https://buefy.github.io/#/documentation
-    // 'nuxt-buefy',
-    // 'bootstrap-vue/nuxt',
+    'bootstrap-vue/nuxt',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa

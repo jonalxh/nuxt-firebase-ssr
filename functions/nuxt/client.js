@@ -14,7 +14,9 @@ import {
   getLocation,
   compile,
   getQueryDiff,
-  globalHandleError
+  globalHandleError,
+  isSamePath,
+  urlJoin
 } from './utils.js'
 import { createApp, NuxtError } from './index.js'
 import fetchMixin from './mixins/fetch.client'
@@ -39,6 +41,11 @@ let router
 
 // Try to rehydrate SSR data from window
 const NUXT = window.__NUXT__ || {}
+
+const $config = NUXT.config || {}
+if ($config._app) {
+  __webpack_public_path__ = urlJoin($config._app.cdnURL, $config._app.assetsPath)
+}
 
 Object.assign(Vue.config, {"silent":true,"performance":false})
 
@@ -149,10 +156,8 @@ function applySSRData (Component, ssrData) {
 }
 
 // Get matched components
-function resolveComponents (router) {
-  const path = getLocation(router.options.base, router.options.mode)
-
-  return flatMapComponents(router.match(path), async (Component, _, match, key, index) => {
+function resolveComponents (route) {
+  return flatMapComponents(route, async (Component, _, match, key, index) => {
     // If component is not resolved yet, resolve it
     if (typeof Component === 'function' && !Component.options) {
       Component = await Component()
@@ -204,8 +209,10 @@ async function render (to, from, next) {
     return next()
   }
   // Handle first render on SPA mode
+  let spaFallback = false
   if (to === from) {
     _lastPaths = []
+    spaFallback = true
   } else {
     const fromMatches = []
     _lastPaths = getMatchedComponents(from, fromMatches).map((Component, i) => {
@@ -471,6 +478,7 @@ function setLayoutForNextPage (to) {
   if (typeof layout === 'function') {
     layout = layout(app.context)
   }
+
   this.setLayout(layout)
 }
 
@@ -491,6 +499,8 @@ function fixPrepatch (to, ___) {
   const instances = getMatchedComponentsInstances(to)
   const Components = getMatchedComponents(to)
 
+  let triggerScroll = false
+
   Vue.nextTick(() => {
     instances.forEach((instance, i) => {
       if (!instance || instance._isDestroyed) {
@@ -508,12 +518,17 @@ function fixPrepatch (to, ___) {
           Vue.set(instance.$data, key, newData[key])
         }
 
-        // Ensure to trigger scroll event after calling scrollBehavior
-        window.$nuxt.$nextTick(() => {
-          window.$nuxt.$emit('triggerScroll')
-        })
+        triggerScroll = true
       }
     })
+
+    if (triggerScroll) {
+      // Ensure to trigger scroll event after calling scrollBehavior
+      window.$nuxt.$nextTick(() => {
+        window.$nuxt.$emit('triggerScroll')
+      })
+    }
+
     checkForErrors(this)
   })
 }
@@ -567,7 +582,7 @@ async function mountApp (__app) {
   }
 
   // Resolve route components
-  const Components = await Promise.all(resolveComponents(router))
+  const Components = await Promise.all(resolveComponents(app.context.route))
 
   // Enable transitions
   _app.setTransitions = _app.$options.nuxt.setTransitions.bind(_app)
@@ -587,13 +602,11 @@ async function mountApp (__app) {
   router.beforeEach(render.bind(_app))
 
   // Fix in static: remove trailing slash to force hydration
-  if (process.static && NUXT.serverRendered && NUXT.routePath !== '/' && NUXT.routePath.slice(-1) !== '/' && _app.context.route.path.slice(-1) === '/') {
-    _app.context.route.path = _app.context.route.path.replace(/\/+$/, '')
-  }
-  // If page already is server rendered and it was done on the same route path as client side render
-  if (NUXT.serverRendered && NUXT.routePath === _app.context.route.path) {
-    mount()
-    return
+  // Full static, if server-rendered: hydrate, to allow custom redirect to generated page
+
+  // Fix in static: remove trailing slash to force hydration
+  if (NUXT.serverRendered && isSamePath(NUXT.routePath, _app.context.route.path)) {
+    return mount()
   }
 
   // First render on client-side

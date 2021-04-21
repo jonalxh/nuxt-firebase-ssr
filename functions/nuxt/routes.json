@@ -2,15 +2,15 @@
   {
     "name": "index",
     "path": "/",
-    "component": "/home/jonathan/Documents/demo-firebase-nuxt/pages/index.vue",
+    "component": "/home/jonathan/Documents/nuxt-firebase-ssr/pages/index.vue",
     "chunkName": "pages/index",
-    "_name": "_b8ad3276"
+    "_name": "_78043490"
   },
   {
     "name": "id",
     "path": "/:id",
-    "component": "/home/jonathan/Documents/demo-firebase-nuxt/pages/_id.vue",
+    "component": "/home/jonathan/Documents/nuxt-firebase-ssr/pages/_id.vue",
     "chunkName": "pages/_id",
-    "_name": "_3d075326"
+    "_name": "_8593ca10"
   }
 ]
